@@ -152,9 +152,9 @@ https://email-mcp-production.up.railway.app
 Open the hostname in a browser. The setup page shows:
 
 - the exact Notion MCP URL
-- the header name
-- the Apple app-specific password help link
-- the remaining steps for copying the token from Railway Variables
+- a suggested connection name
+- `Authentication: Bearer Token`
+- the bearer token format and a reminder to copy `EMAIL_MCP_AUTH_TOKEN` from Railway Variables
 
 If you still want the CLI output, print the Notion values with:
 

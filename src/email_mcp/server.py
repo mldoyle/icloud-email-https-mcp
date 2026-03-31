@@ -126,8 +126,9 @@ def setup_payload(request: Request) -> dict[str, object]:
         "service_name": "icloud-email-https-mcp",
         "base_url": base_url,
         "mcp_url": f"{base_url}/mcp",
-        "header_name": "Authorization",
-        "header_value_hint": "Bearer <copy EMAIL_MCP_AUTH_TOKEN from Railway Variables>",
+        "connection_name_hint": "Email MCP Server",
+        "authentication_type": "Bearer Token",
+        "bearer_token_hint": "Bearer <copy EMAIL_MCP_AUTH_TOKEN from Railway Variables>",
         "apple_app_password_url": APPLE_APP_PASSWORD_URL,
         **setup,
     }
@@ -226,7 +227,7 @@ def setup_page_html(payload: dict[str, object]) -> str:
 <body>
   <main>
     <h1>iCloud Email HTTPS MCP</h1>
-    <p class="lead">Use this page after deploying the Railway template. It gives you the exact Notion MCP URL and the last setup steps without exposing your token publicly.</p>
+    <p class="lead">Use this page after deploying on Railway. It gives you the exact values to paste into Notion without exposing your token publicly.</p>
 
     <section class="status {status_class}">
       <h2>{escape(status_title)}</h2>
@@ -238,40 +239,22 @@ def setup_page_html(payload: dict[str, object]) -> str:
     {missing_html}
 
     <section class="card">
-      <h2>Generate Apple app-specific password</h2>
-      <p>Create an app-specific password for iCloud Mail before connecting the server.</p>
-      <p><a href="{escape(APPLE_APP_PASSWORD_URL)}">{escape(APPLE_APP_PASSWORD_URL)}</a></p>
-    </section>
-
-    <section class="card">
       <h2>Paste into Notion</h2>
       <span class="label">MCP server URL</span>
       <pre>{escape(str(payload["mcp_url"]))}</pre>
-      <span class="label">Header name</span>
-      <pre>{escape(str(payload["header_name"]))}</pre>
-      <span class="label">Header value</span>
-      <pre>{escape(str(payload["header_value_hint"]))}</pre>
+      <span class="label">Name</span>
+      <pre>{escape(str(payload["connection_name_hint"]))}</pre>
+      <span class="label">Authentication</span>
+      <pre>{escape(str(payload["authentication_type"]))}</pre>
+      <span class="label">Bearer Token</span>
+      <pre>{escape(str(payload["bearer_token_hint"]))}</pre>
       <p>{auth_note}</p>
-    </section>
-
-    <section class="card">
-      <h2>Railway variables</h2>
-      <pre>EMAIL_IMAP_HOST={escape(str(payload["imap_host"]))}
-EMAIL_IMAP_PORT={escape(str(payload["imap_port"]))}
-EMAIL_IMAP_USE_SSL={'true' if payload["imap_use_ssl"] else 'false'}
-EMAIL_DEFAULT_MAILBOX={escape(str(payload["default_mailbox"]))}
-EMAIL_USERNAME=&lt;your iCloud email&gt;
-APP_SPECIFIC_PASSWORD=&lt;your Apple app-specific password&gt;
-EMAIL_MCP_AUTH_TOKEN=&lt;generated secret&gt;</pre>
-    </section>
-
-    <section class="card">
-      <h2>Finish setup</h2>
       <ol>
-        <li>Open your Railway service Variables tab.</li>
-        <li>Set <code>EMAIL_USERNAME</code> and <code>APP_SPECIFIC_PASSWORD</code>.</li>
-        <li>Copy <code>EMAIL_MCP_AUTH_TOKEN</code> from Railway and paste it into Notion as the bearer token.</li>
-        <li>Add a custom MCP connection in Notion using the values above.</li>
+        <li>Copy <code>EMAIL_MCP_AUTH_TOKEN</code> from Railway Variables.</li>
+        <li>In Notion Custom Agent, add a Custom MCP server.</li>
+        <li>Set <code>Name</code> to anything like <code>Email MCP Server</code>.</li>
+        <li>Set <code>Authentication</code> to <code>Bearer Token</code>.</li>
+        <li>Set <code>Bearer Token</code> to <code>Bearer &lt;your EMAIL_MCP_AUTH_TOKEN&gt;</code>.</li>
       </ol>
     </section>
   </main>

@@ -99,10 +99,11 @@ class ServerMiddlewareTests(unittest.TestCase):
             body["mcp_url"],
             "https://icloud-email-https-mcp-production.up.railway.app/mcp",
         )
-        self.assertEqual(body["header_name"], "Authorization")
+        self.assertEqual(body["connection_name_hint"], "Email MCP Server")
+        self.assertEqual(body["authentication_type"], "Bearer Token")
         self.assertTrue(body["auth_token_configured"])
         self.assertEqual(
-            body["header_value_hint"],
+            body["bearer_token_hint"],
             "Bearer <copy EMAIL_MCP_AUTH_TOKEN from Railway Variables>",
         )
         self.assertNotIn("super-secret-token", response.text)
@@ -112,8 +113,9 @@ class ServerMiddlewareTests(unittest.TestCase):
             "service_name": "icloud-email-https-mcp",
             "base_url": "https://example.up.railway.app",
             "mcp_url": "https://example.up.railway.app/mcp",
-            "header_name": "Authorization",
-            "header_value_hint": "Bearer <copy EMAIL_MCP_AUTH_TOKEN from Railway Variables>",
+            "connection_name_hint": "Email MCP Server",
+            "authentication_type": "Bearer Token",
+            "bearer_token_hint": "Bearer <copy EMAIL_MCP_AUTH_TOKEN from Railway Variables>",
             "apple_app_password_url": "https://support.apple.com/en-ca/102654",
             "ready": False,
             "missing_variables": ["EMAIL_USERNAME", "EMAIL_MCP_AUTH_TOKEN"],
@@ -132,6 +134,7 @@ class ServerMiddlewareTests(unittest.TestCase):
         self.assertIn("Setup Incomplete", response.text)
         self.assertIn("EMAIL_USERNAME", response.text)
         self.assertIn("EMAIL_MCP_AUTH_TOKEN", response.text)
+        self.assertIn("Paste into Notion", response.text)
 
     def test_app_config_does_not_require_mailbox_credentials(self) -> None:
         config = AppConfig.from_env()
