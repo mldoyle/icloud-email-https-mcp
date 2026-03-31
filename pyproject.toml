@@ -1,0 +1,19 @@
+[project]
+name = "icloud-email-https-mcp"
+version = "0.1.0"
+description = "A read-only FastMCP server for iCloud Mail over HTTPS."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=3.2.0,<3.3.0",
+]
+
+[project.scripts]
+email-mcp = "email_mcp.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/email_mcp"]
