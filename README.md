@@ -41,7 +41,7 @@ Simple setup:
 The setup page is the root of your public Railway domain, for example `https://your-service.up.railway.app/`.
 It is public-safe: it shows the exact Notion connection values, but it does not expose the bearer token.
 
-## Quickstart
+## Local Quickstart
 
 ### 1. Install dependencies
 
@@ -168,30 +168,6 @@ That prints:
 - Header name: `Authorization`
 - Header value: `Bearer <your token>`
 
-## Railway Template
-
-For the cleanest GitHub-to-Notion onboarding, publish this service as a Railway template.
-
-Recommended template inputs:
-
-- required: `EMAIL_USERNAME`
-- required: `APP_SPECIFIC_PASSWORD`
-- generated secret: `EMAIL_MCP_AUTH_TOKEN`
-
-Recommended fixed defaults:
-
-- `EMAIL_IMAP_HOST=imap.mail.me.com`
-- `EMAIL_IMAP_PORT=993`
-- `EMAIL_IMAP_USE_SSL=true`
-- `EMAIL_DEFAULT_MAILBOX=INBOX`
-
-After a user deploys the template, they should:
-
-1. open the generated Railway URL in a browser
-2. copy the `MCP server URL` shown on the setup page
-3. copy `EMAIL_MCP_AUTH_TOKEN` from Railway Variables
-4. paste both into Notion
-
 ## Notion Setup
 
 In Notion Custom Agent:
@@ -268,24 +244,3 @@ The MCP server exposes:
 - `subject`
 
 `get_message` expects the `uid` returned by `list_messages`.
-
-## Other Hosting Options
-
-Railway is the recommended default, but the same Docker image should also work on other container-friendly hosts such as Render, Fly.io, or a small VPS.
-
-For development or short-lived testing, a local server plus Cloudflare Tunnel is fine. It is not the recommended long-term path.
-
-Vercel is not recommended for this project because Vercel is a function platform, not a Docker container host, and this server is a better fit for a long-running HTTP deployment.
-
-## Security
-
-- Do not commit `.env`
-- Do not share your iCloud app-specific password
-- Keep bearer-token auth enabled on public deployments
-- Revoke any app-specific password that was ever exposed in logs, screenshots, or commit history
-
-## Tests
-
-```bash
-PYTHONPATH=src python -m unittest discover -s tests
-```
