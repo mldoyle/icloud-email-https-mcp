@@ -19,13 +19,32 @@ It is intentionally read-only:
 
 The recommended default is:
 
-1. clone the repo
-2. run `email-mcp init`
-3. deploy to Railway
-4. run `email-mcp notion --base-url https://...`
-5. paste the generated URL and bearer token into Notion
+1. publish this repo to GitHub
+2. turn the Railway service into a reusable template
+3. let users deploy their own copy on Railway
+4. let users open the deployed app's setup page
+5. let users paste the generated MCP URL and bearer token into Notion
 
 This avoids local tunnels and gives each user their own deployment and their own iCloud credentials.
+
+## End-User Flow
+
+The intended self-serve flow is:
+
+1. click your Railway template
+2. enter `EMAIL_IMAP_USERNAME` and `EMAIL_IMAP_PASSWORD`
+3. let Railway generate `EMAIL_MCP_AUTH_TOKEN`
+4. open the deployed service root, for example `https://your-service.up.railway.app`
+5. copy the Notion MCP URL from the setup page
+6. copy `EMAIL_MCP_AUTH_TOKEN` from Railway Variables
+7. paste both into a Notion Custom Agent
+
+The setup page is intentionally public-safe:
+
+- it shows the exact `https://.../mcp` URL
+- it links to Apple's app-specific password instructions
+- it reminds the user where to copy the token from
+- it does not print the bearer token value publicly
 
 ## Quickstart
 
@@ -81,6 +100,7 @@ Endpoints:
 
 - MCP: `http://127.0.0.1:8000/mcp`
 - Health: `http://127.0.0.1:8000/health`
+- Setup page: `http://127.0.0.1:8000/`
 
 ## Railway Deployment
 
@@ -134,7 +154,14 @@ Once deployed, Railway gives you a public HTTPS hostname, for example:
 https://email-mcp-production.up.railway.app
 ```
 
-Print the exact Notion values with:
+Open the hostname in a browser. The setup page shows:
+
+- the exact Notion MCP URL
+- the header name
+- the Apple app-specific password help link
+- the remaining steps for copying the token from Railway Variables
+
+If you still want the CLI output, print the Notion values with:
 
 ```bash
 uv run email-mcp notion --base-url https://email-mcp-production.up.railway.app
@@ -145,6 +172,30 @@ That prints:
 - Notion MCP URL: `https://email-mcp-production.up.railway.app/mcp`
 - Header name: `Authorization`
 - Header value: `Bearer <your token>`
+
+## Railway Template
+
+For the cleanest GitHub-to-Notion onboarding, publish this service as a Railway template.
+
+Recommended template inputs:
+
+- required: `EMAIL_IMAP_USERNAME`
+- required: `EMAIL_IMAP_PASSWORD`
+- generated secret: `EMAIL_MCP_AUTH_TOKEN`
+
+Recommended fixed defaults:
+
+- `EMAIL_IMAP_HOST=imap.mail.me.com`
+- `EMAIL_IMAP_PORT=993`
+- `EMAIL_IMAP_USE_SSL=true`
+- `EMAIL_DEFAULT_MAILBOX=INBOX`
+
+After a user deploys the template, they should:
+
+1. open the generated Railway URL in a browser
+2. copy the `MCP server URL` shown on the setup page
+3. copy `EMAIL_MCP_AUTH_TOKEN` from Railway Variables
+4. paste both into Notion
 
 ## Notion Setup
 

@@ -81,7 +81,9 @@ def run_init_command(args: argparse.Namespace) -> int:
     print("Next steps:")
     print("1. Deploy the project to Railway.")
     print("2. Set the service variables from this file if Railway did not import them.")
-    print("3. Once Railway gives you a public hostname, run:")
+    print("3. Once Railway gives you a public hostname, open it in a browser.")
+    print("4. The setup page will show the final Notion MCP URL and remind you to copy EMAIL_MCP_AUTH_TOKEN from Railway Variables.")
+    print("5. If you prefer the CLI output, run:")
     print(f"   uv run email-mcp notion --base-url https://your-service.up.railway.app --token {auth_token}")
     return 0
 
@@ -106,6 +108,8 @@ def run_notion_command(args: argparse.Namespace) -> int:
     print("")
     print("Header value:")
     print(f"Bearer {token}")
+    print("")
+    print("If the app is already deployed, you can also open the service root URL in a browser to see the same Notion values and the Apple app-password link.")
     return 0
 
 
