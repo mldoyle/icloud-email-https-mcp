@@ -40,8 +40,8 @@ def write_env_file(
     lines = [
         "EMAIL_IMAP_HOST=imap.mail.me.com",
         "EMAIL_IMAP_PORT=993",
-        f"EMAIL_IMAP_USERNAME={email}",
-        f"EMAIL_IMAP_PASSWORD={app_password}",
+        f"EMAIL_USERNAME={email}",
+        f"APP_SPECIFIC_PASSWORD={app_password}",
         "EMAIL_IMAP_USE_SSL=true",
         "EMAIL_DEFAULT_MAILBOX=INBOX",
         f"EMAIL_MCP_AUTH_TOKEN={auth_token}",

@@ -10,7 +10,7 @@ from starlette.responses import JSONResponse
 from starlette.routing import Route
 from starlette.testclient import TestClient
 
-from email_mcp.config import AppConfig
+from email_mcp.config import AppConfig, MailboxConfig
 from email_mcp.server import BearerTokenAuthMiddleware, create_http_app
 
 
@@ -83,8 +83,8 @@ class ServerMiddlewareTests(unittest.TestCase):
             with patch.dict(
                 os.environ,
                 {
-                    "EMAIL_IMAP_USERNAME": "user@icloud.com",
-                    "EMAIL_IMAP_PASSWORD": "app-password",
+                    "EMAIL_USERNAME": "user@icloud.com",
+                    "APP_SPECIFIC_PASSWORD": "app-password",
                     "EMAIL_MCP_AUTH_TOKEN": "super-secret-token",
                     "RAILWAY_PUBLIC_DOMAIN": "icloud-email-https-mcp-production.up.railway.app",
                 },
@@ -116,7 +116,7 @@ class ServerMiddlewareTests(unittest.TestCase):
             "header_value_hint": "Bearer <copy EMAIL_MCP_AUTH_TOKEN from Railway Variables>",
             "apple_app_password_url": "https://support.apple.com/en-ca/102654",
             "ready": False,
-            "missing_variables": ["EMAIL_IMAP_USERNAME", "EMAIL_MCP_AUTH_TOKEN"],
+            "missing_variables": ["EMAIL_USERNAME", "EMAIL_MCP_AUTH_TOKEN"],
             "imap_host": "imap.mail.me.com",
             "imap_port": "993",
             "imap_use_ssl": True,
@@ -130,12 +130,40 @@ class ServerMiddlewareTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("Setup Incomplete", response.text)
-        self.assertIn("EMAIL_IMAP_USERNAME", response.text)
+        self.assertIn("EMAIL_USERNAME", response.text)
         self.assertIn("EMAIL_MCP_AUTH_TOKEN", response.text)
 
     def test_app_config_does_not_require_mailbox_credentials(self) -> None:
         config = AppConfig.from_env()
         self.assertIsInstance(config.default_mailbox, str)
+
+    def test_mailbox_config_supports_new_and_legacy_variable_names(self) -> None:
+        with patch("email_mcp.config.load_dotenv", return_value=None):
+            with patch.dict(
+                os.environ,
+                {
+                    "EMAIL_IMAP_HOST": "imap.mail.me.com",
+                    "EMAIL_USERNAME": "new@icloud.com",
+                    "APP_SPECIFIC_PASSWORD": "new-password",
+                },
+                clear=True,
+            ):
+                config = MailboxConfig.from_env()
+                self.assertEqual(config.username, "new@icloud.com")
+                self.assertEqual(config.password, "new-password")
+
+            with patch.dict(
+                os.environ,
+                {
+                    "EMAIL_IMAP_HOST": "imap.mail.me.com",
+                    "EMAIL_IMAP_USERNAME": "legacy@icloud.com",
+                    "EMAIL_IMAP_PASSWORD": "legacy-password",
+                },
+                clear=True,
+            ):
+                config = MailboxConfig.from_env()
+                self.assertEqual(config.username, "legacy@icloud.com")
+                self.assertEqual(config.password, "legacy-password")
 
 
 if __name__ == "__main__":

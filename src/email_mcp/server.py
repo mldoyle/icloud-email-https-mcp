@@ -75,8 +75,8 @@ def normalize_path(path: str) -> str:
 def configured_setup_values() -> dict[str, object]:
     load_dotenv()
 
-    username = os.getenv("EMAIL_IMAP_USERNAME", "").strip()
-    password = os.getenv("EMAIL_IMAP_PASSWORD", "").strip()
+    username = os.getenv("EMAIL_USERNAME", "").strip() or os.getenv("EMAIL_IMAP_USERNAME", "").strip()
+    password = os.getenv("APP_SPECIFIC_PASSWORD", "").strip() or os.getenv("EMAIL_IMAP_PASSWORD", "").strip()
     host = os.getenv("EMAIL_IMAP_HOST", "").strip() or "imap.mail.me.com"
     port = os.getenv("EMAIL_IMAP_PORT", "").strip() or "993"
     use_ssl = os.getenv("EMAIL_IMAP_USE_SSL", "").strip() or "true"
@@ -86,8 +86,8 @@ def configured_setup_values() -> dict[str, object]:
     missing = [
         key
         for key, value in (
-            ("EMAIL_IMAP_USERNAME", username),
-            ("EMAIL_IMAP_PASSWORD", password),
+            ("EMAIL_USERNAME", username),
+            ("APP_SPECIFIC_PASSWORD", password),
             ("EMAIL_MCP_AUTH_TOKEN", auth_token),
         )
         if not value
@@ -260,8 +260,8 @@ def setup_page_html(payload: dict[str, object]) -> str:
 EMAIL_IMAP_PORT={escape(str(payload["imap_port"]))}
 EMAIL_IMAP_USE_SSL={'true' if payload["imap_use_ssl"] else 'false'}
 EMAIL_DEFAULT_MAILBOX={escape(str(payload["default_mailbox"]))}
-EMAIL_IMAP_USERNAME=&lt;your iCloud email&gt;
-EMAIL_IMAP_PASSWORD=&lt;your Apple app-specific password&gt;
+EMAIL_USERNAME=&lt;your iCloud email&gt;
+APP_SPECIFIC_PASSWORD=&lt;your Apple app-specific password&gt;
 EMAIL_MCP_AUTH_TOKEN=&lt;generated secret&gt;</pre>
     </section>
 
@@ -269,7 +269,7 @@ EMAIL_MCP_AUTH_TOKEN=&lt;generated secret&gt;</pre>
       <h2>Finish setup</h2>
       <ol>
         <li>Open your Railway service Variables tab.</li>
-        <li>Set <code>EMAIL_IMAP_USERNAME</code> and <code>EMAIL_IMAP_PASSWORD</code>.</li>
+        <li>Set <code>EMAIL_USERNAME</code> and <code>APP_SPECIFIC_PASSWORD</code>.</li>
         <li>Copy <code>EMAIL_MCP_AUTH_TOKEN</code> from Railway and paste it into Notion as the bearer token.</li>
         <li>Add a custom MCP connection in Notion using the values above.</li>
       </ol>

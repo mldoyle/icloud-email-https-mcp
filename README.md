@@ -32,7 +32,7 @@ This avoids local tunnels and gives each user their own deployment and their own
 The intended self-serve flow is:
 
 1. click your Railway template
-2. enter `EMAIL_IMAP_USERNAME` and `EMAIL_IMAP_PASSWORD`
+2. enter `EMAIL_USERNAME` and `APP_SPECIFIC_PASSWORD`
 3. let Railway generate `EMAIL_MCP_AUTH_TOKEN`
 4. open the deployed service root, for example `https://your-service.up.railway.app`
 5. copy the Notion MCP URL from the setup page
@@ -74,8 +74,8 @@ This writes `.env` with:
 
 - `EMAIL_IMAP_HOST=imap.mail.me.com`
 - `EMAIL_IMAP_PORT=993`
-- `EMAIL_IMAP_USERNAME=...`
-- `EMAIL_IMAP_PASSWORD=...`
+- `EMAIL_USERNAME=...`
+- `APP_SPECIFIC_PASSWORD=...`
 - `EMAIL_IMAP_USE_SSL=true`
 - `EMAIL_DEFAULT_MAILBOX=INBOX`
 - `EMAIL_MCP_AUTH_TOKEN=<generated random token>`
@@ -140,8 +140,8 @@ If Railway did not import them from your local `.env`, set these in the Railway 
 
 - `EMAIL_IMAP_HOST=imap.mail.me.com`
 - `EMAIL_IMAP_PORT=993`
-- `EMAIL_IMAP_USERNAME=yourname@icloud.com`
-- `EMAIL_IMAP_PASSWORD=your-app-specific-password`
+- `EMAIL_USERNAME=yourname@icloud.com`
+- `APP_SPECIFIC_PASSWORD=your-app-specific-password`
 - `EMAIL_IMAP_USE_SSL=true`
 - `EMAIL_DEFAULT_MAILBOX=INBOX`
 - `EMAIL_MCP_AUTH_TOKEN=<your generated token>`
@@ -179,8 +179,8 @@ For the cleanest GitHub-to-Notion onboarding, publish this service as a Railway 
 
 Recommended template inputs:
 
-- required: `EMAIL_IMAP_USERNAME`
-- required: `EMAIL_IMAP_PASSWORD`
+- required: `EMAIL_USERNAME`
+- required: `APP_SPECIFIC_PASSWORD`
 - generated secret: `EMAIL_MCP_AUTH_TOKEN`
 
 Recommended fixed defaults:
@@ -214,6 +214,8 @@ Then enter:
 - Header value: `Bearer <your EMAIL_MCP_AUTH_TOKEN>`
 
 Notion requires a publicly reachable `https://...` URL, which is why local-only deployment is not enough for production use.
+
+`EMAIL_IMAP_USERNAME` and `EMAIL_IMAP_PASSWORD` are still accepted for backward compatibility, but new setups should use `EMAIL_USERNAME` and `APP_SPECIFIC_PASSWORD`.
 
 ## CLI Helpers
 

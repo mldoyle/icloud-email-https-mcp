@@ -31,7 +31,8 @@ class CliTests(unittest.TestCase):
                 force=False,
             )
             content = env_path.read_text(encoding="utf-8")
-            self.assertIn("EMAIL_IMAP_USERNAME=user@icloud.com", content)
+            self.assertIn("EMAIL_USERNAME=user@icloud.com", content)
+            self.assertIn("APP_SPECIFIC_PASSWORD=app-password", content)
             self.assertIn("EMAIL_MCP_AUTH_TOKEN=token", content)
 
 

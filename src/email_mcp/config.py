@@ -50,6 +50,14 @@ def load_dotenv(path: str | Path = ".env") -> None:
         os.environ.setdefault(key, value)
 
 
+def env_first(*names: str, default: str = "") -> str:
+    for name in names:
+        value = os.getenv(name, "").strip()
+        if value:
+            return value
+    return default
+
+
 @dataclass(frozen=True, slots=True)
 class AppConfig:
     default_mailbox: str
@@ -59,7 +67,8 @@ class AppConfig:
     def from_env(cls) -> "AppConfig":
         load_dotenv()
         default_mailbox = os.getenv("EMAIL_DEFAULT_MAILBOX", "INBOX").strip() or "INBOX"
-        auth_token = os.getenv("EMAIL_MCP_AUTH_TOKEN", "").strip() or None
+        auth_token = env_first("EMAIL_MCP_AUTH_TOKEN")
+        auth_token = auth_token or None
         return cls(default_mailbox=default_mailbox, auth_token=auth_token)
 
 
@@ -76,16 +85,16 @@ class MailboxConfig:
     def from_env(cls) -> "MailboxConfig":
         load_dotenv()
 
-        host = os.getenv("EMAIL_IMAP_HOST", "").strip()
-        username = os.getenv("EMAIL_IMAP_USERNAME", "").strip()
-        password = os.getenv("EMAIL_IMAP_PASSWORD", "").strip()
+        host = env_first("EMAIL_IMAP_HOST")
+        username = env_first("EMAIL_USERNAME", "EMAIL_IMAP_USERNAME")
+        password = env_first("APP_SPECIFIC_PASSWORD", "EMAIL_IMAP_PASSWORD")
 
         missing = [
             name
             for name, value in (
                 ("EMAIL_IMAP_HOST", host),
-                ("EMAIL_IMAP_USERNAME", username),
-                ("EMAIL_IMAP_PASSWORD", password),
+                ("EMAIL_USERNAME", username),
+                ("APP_SPECIFIC_PASSWORD", password),
             )
             if not value
         ]
