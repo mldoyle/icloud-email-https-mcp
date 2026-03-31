@@ -23,7 +23,7 @@ The fastest way to use this server is to use this Railway template:
 
 Simple setup:
 
-1. Setup on Railway, i.e. connect a GitHub account. Click deploy. 
+1. Setup on Railway, i.e. connect a GitHub account. Click deploy.
 2. Generate an Apple app-specific password for your iCloud account:
    https://support.apple.com/en-ca/102654
 3. In Railway, set:
@@ -35,11 +35,11 @@ Simple setup:
 7. Copy `EMAIL_MCP_AUTH_TOKEN` from Railway Variables.
 8. In Notion Custom Agent, add a Custom MCP server using:
    - URL: the setup page's `MCP server URL`
-   - Name: Anything like Email MCP Server
    - Authentication: Bearer Token
    - Bearer Token: `Bearer <your EMAIL_MCP_AUTH_TOKEN>`
 
-The setup page is public-safe. It shows the exact MCP URL and the Apple instructions link. 
+The setup page is the root of your public Railway domain, for example `https://your-service.up.railway.app/`.
+It is public-safe: it shows the exact Notion connection values, but it does not expose the bearer token.
 
 ## Quickstart
 
