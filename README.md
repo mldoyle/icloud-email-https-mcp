@@ -1,5 +1,7 @@
 # iCloud Email HTTPS MCP
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/szLHU-?referralCode=qW_MxP&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 `icloud-email-https-mcp` is a read-only [FastMCP](https://gofastmcp.com/) server for iCloud Mail over IMAP.
 
 It is designed for Notion Custom Agents and similar MCP clients. The server can:
@@ -14,6 +16,31 @@ It is intentionally read-only:
 - mailboxes are opened with `readonly=True`
 - messages are fetched with `BODY.PEEK[]`
 - there are no send, delete, move, or flag-changing tools
+
+## Deploy On Railway
+
+The fastest way to use this server is the Railway template:
+
+[Deploy on Railway](https://railway.com/deploy/szLHU-?referralCode=qW_MxP&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
+Simple setup:
+
+1. Click the Railway deploy button.
+2. Generate an Apple app-specific password for your iCloud account:
+   https://support.apple.com/en-ca/102654
+3. In Railway, set:
+   - `EMAIL_USERNAME` to your iCloud address
+   - `APP_SPECIFIC_PASSWORD` to your Apple app-specific password
+4. Let Railway generate `EMAIL_MCP_AUTH_TOKEN`.
+5. Open your deployed Railway URL in a browser.
+6. Copy the `MCP server URL` shown on the setup page.
+7. Copy `EMAIL_MCP_AUTH_TOKEN` from Railway Variables.
+8. In Notion Custom Agent, add a Custom MCP server using:
+   - URL: the setup page's `MCP server URL`
+   - Header name: `Authorization`
+   - Header value: `Bearer <your EMAIL_MCP_AUTH_TOKEN>`
+
+The setup page is public-safe. It shows the exact MCP URL and the Apple instructions link, but it does not expose the bearer token.
 
 ## Recommended Setup
 
@@ -42,7 +69,7 @@ The intended self-serve flow is:
 The setup page is intentionally public-safe:
 
 - it shows the exact `https://.../mcp` URL
-- it links to Apple's app-specific password instructions
+- it links to Apple's app-specific password instructions: https://support.apple.com/en-ca/102654
 - it reminds the user where to copy the token from
 - it does not print the bearer token value publicly
 
